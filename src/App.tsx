@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
 
-function App() {
+const width = 8;
+const candyColors = [
+  'blue',
+  'green',
+  'orange',
+  'purlple',
+  'red',
+  'yellow'
+];
+
+function App():JSX.Element {
+  const [currentColorArrangement, setCurrentColorArragement] = useState<string[]>([])
+
+  function createBoard() {
+    const randomColorArrangement = []
+    for(let i=0; i < width * width; i++) {
+      const randomColor = candyColors[Math.floor(Math.random() * candyColors.length)]
+      randomColorArrangement.push(randomColor)
+    }
+    setCurrentColorArragement(randomColorArrangement);
+  }
+
+  createBoard()
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+     
     </div>
   );
 }
