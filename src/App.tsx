@@ -93,6 +93,27 @@ function App():JSX.Element {
     [currentColorArrangement],
   );
 
+  const moveIntoSquareBelow = useCallback(
+    () => {
+      for(let i = 0; i < 64 - width; i++ ) {
+        const firstRow = [0, 1, 2, 3, 4, 5, 6, 7]
+        const isFirstRow = firstRow.includes(i)
+
+        if (isFirstRow && currentColorArrangement[i] === '') {
+          let randomNumber = Math.floor(Math.random() * candyColors.length)
+          currentColorArrangement[i] = candyColors[randomNumber]
+
+        }
+
+        if ((currentColorArrangement[i + width]) === '') {
+          currentColorArrangement[i + width] = currentColorArrangement[i]
+          currentColorArrangement[i] = ''
+        }
+      }
+    },
+    [currentColorArrangement],
+  );
+
   function createBoard() {
     const randomColorArrangement = []
     for(let i=0; i < width * width; i++) {
@@ -101,6 +122,10 @@ function App():JSX.Element {
     }
     setCurrentColorArragement(randomColorArrangement);
   }
+
+  function dragStart() {}
+  function dragDrop() {}
+  function dragEnd() {}
 
   useEffect(() => {
     createBoard()
@@ -112,14 +137,13 @@ function App():JSX.Element {
       checkRowOfFour()
       checkColumnOfThree()
       checkRowOfThree()
+      moveIntoSquareBelow()
       setCurrentColorArragement([...currentColorArrangement])
     }, 100)
 
     return () => clearInterval(timer)
 
-  }, [checkColumnOfFour, checkColumnOfThree, currentColorArrangement, checkRowOfThree, checkRowOfFour])  
-
-  console.log(currentColorArrangement)
+  }, [checkColumnOfFour, checkColumnOfThree, currentColorArrangement, checkRowOfThree, checkRowOfFour, moveIntoSquareBelow])  
 
   return (
     <Wrapper>
@@ -129,6 +153,14 @@ function App():JSX.Element {
             key={index}
             style={{backgroundColor: candyColor}}
             alt={candyColor}
+            data-id={index}
+            draggable={true}
+            onDragStart={dragStart}
+            onDragOver={(e) => e.preventDefault()}
+            onDragEnter={(e) => e.preventDefault()}
+            onDragLeave={(e) => e.preventDefault()}
+            onDrop={dragDrop}
+            onDragEnd={dragEnd}
           />
         ))}
       </Game>
