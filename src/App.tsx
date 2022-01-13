@@ -31,6 +31,19 @@ function App():JSX.Element {
     setCurrentBoardOfColors(boardOfColors);
   }
 
+  function checkColumnOfFour() {
+    for (let i = 0; i < 39; i++) {
+      const columnOfFour = [ i, i + width, i + width * 2, i + width * 3 ]
+      const currentColorOfCircle = currentBoardOfColors[i]
+
+     if(columnOfFour.every((circle) => currentBoardOfColors[circle] === currentColorOfCircle)) {
+       columnOfFour.forEach((circle) => currentBoardOfColors[circle] = 'white')
+     }
+    }
+  }
+
+  checkColumnOfFour()
+
   useEffect(() => {
     createBoard()
   }, [])

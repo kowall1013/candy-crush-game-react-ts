@@ -27,8 +27,8 @@ type GameProps = {
 function Game({ currentBoardOfColors }: GameProps):JSX.Element {
   return (
     <GameBoard>
-      {currentBoardOfColors.map((currentColor) => (
-        <Circle currentColor={currentColor} />
+      {currentBoardOfColors.map((currentColor, index) => (
+        <Circle key={index} onClick={(e) => console.log(e.target)} data-id={index}  currentColor={currentColor} />
       ))}
     </GameBoard>
   )
