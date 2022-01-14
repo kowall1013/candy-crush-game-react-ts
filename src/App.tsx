@@ -31,53 +31,93 @@ function App():JSX.Element {
     setCurrentBoardOfColors(boardOfColors);
   }
 
-  function checkColumnOfFour() {
+  const checkColumnOfFour = useCallback(() => {
     for (let i = 0; i <= 39; i++) {
       const columnOfFour = [i, i + width, i + width * 2, i + width * 3];
       const currentColor = currentBoardOfColors[i];
+      const isBlank = currentBoardOfColors[i] === 'white'
 
-      if(columnOfFour.every((circle) => currentBoardOfColors[circle] === currentColor)) {
+      if(columnOfFour.every((circle) => currentBoardOfColors[circle] === currentColor && !isBlank)) {
         columnOfFour.forEach((cirlce) => currentBoardOfColors[cirlce] = 'white')
       }
     }
-  }
+  }, [currentBoardOfColors])
 
-  function checkRowOfFour() {
-    for(let i = 0; i <=64; i++) {
+  const checkRowOfFour = useCallback(() => {
+    for(let i = 0; i <= 64; i++) {
       const rowOfFour = [i, i + 1, i + 2, i + 3]
       const currentColor = currentBoardOfColors[i]
-      const notValid = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55, 61, 62, 63];
+      const notValid = [5, 6, 7, 13, 14, 15, 21, 22, 23, 29, 30, 31, 37, 38, 39, 45, 46, 47, 53, 54, 55, 62, 63, 64];
+      const isBlank = currentBoardOfColors[i] === 'white'
 
       if(notValid.includes(i)) continue
 
-      if(rowOfFour.every((circle) => currentBoardOfColors[circle] === currentColor)){
+      if(rowOfFour.every((circle) => currentBoardOfColors[circle] === currentColor && !isBlank)){
         rowOfFour.forEach((circle) => currentBoardOfColors[circle] = 'white')
       }
     }
-  }
+  }, [currentBoardOfColors])
 
-  function checkColumnOfThree() {
+  const checkColumnOfThree = useCallback(() => {
     for(let i = 0; i <= 47; i++ ) {
       const columnOfThree = [i, i + width, i + width * 2]
       const currentColor = currentBoardOfColors[i]
+      const isBlank = currentBoardOfColors[i] === 'white'
 
-      if(columnOfThree.every((circle) => currentBoardOfColors[circle] === currentColor)) {
+      if(columnOfThree.every((circle) => currentBoardOfColors[circle] === currentColor && !isBlank)) {
         columnOfThree.forEach((circle) => currentBoardOfColors[circle] = 'white')
       }
     }
-  }
+  }, [currentBoardOfColors])
 
-  function checkRowOfThree() {
-    
-  }
+  const checkRowOfThree = useCallback(() => {
+    for(let i = 0; i <= width * width; i++) {
+      const rowOfThree = [i, i + 1, i + 2]
+      const currentColor = currentBoardOfColors[i]
+      const notValid = [6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55, 63, 64]
+      const isBlank = currentBoardOfColors[i] === 'white'
 
+      if(notValid.includes(i)) continue
 
+      if(rowOfThree.every((circle) => currentBoardOfColors[circle] === currentColor && !isBlank)) {
+        rowOfThree.forEach((circle) => currentBoardOfColors[circle] = 'white')
+      }
+    }
+  }, [currentBoardOfColors])
 
-  checkColumnOfThree()
+  const moveBlankColorOutsideSquare = useCallback(() => {
+    for(let i = 0; i <= 55; i++) {
+      const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
+      const isFirstRow = firstRow.includes(i)
+      
+      if(isFirstRow && currentBoardOfColors[i] === 'white') {
+        let randomNumber = Math.floor(Math.random() * colors.length)
+        currentBoardOfColors[i] = colors[randomNumber]
+      }
+
+      if(currentBoardOfColors[i + width] === 'white') {
+        currentBoardOfColors[i + width] = currentBoardOfColors[i]
+        currentBoardOfColors[i] = 'white'
+      }
+    }
+  }, [currentBoardOfColors])
 
   useEffect(() => {
     createBoard()
   }, [])
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      checkColumnOfFour()
+      checkRowOfFour()
+      checkRowOfThree()
+      checkColumnOfThree()
+      moveBlankColorOutsideSquare()
+      setCurrentBoardOfColors([...currentBoardOfColors]);
+    }, 3000)
+
+    return () => clearInterval(timer)
+  }, [checkColumnOfFour, checkRowOfFour, checkRowOfThree, checkColumnOfThree, currentBoardOfColors, moveBlankColorOutsideSquare])
 
   return (
     <Wrapper>
