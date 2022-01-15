@@ -39,6 +39,7 @@ function App():JSX.Element {
 
       if(columnOfFour.every((circle) => currentBoardOfColors[circle] === currentColor && !isBlank)) {
         columnOfFour.forEach((cirlce) => currentBoardOfColors[cirlce] = 'white')
+        return true
       }
     }
   }, [currentBoardOfColors])
@@ -54,6 +55,7 @@ function App():JSX.Element {
 
       if(rowOfFour.every((circle) => currentBoardOfColors[circle] === currentColor && !isBlank)){
         rowOfFour.forEach((circle) => currentBoardOfColors[circle] = 'white')
+        return true
       }
     }
   }, [currentBoardOfColors])
@@ -66,6 +68,7 @@ function App():JSX.Element {
 
       if(columnOfThree.every((circle) => currentBoardOfColors[circle] === currentColor && !isBlank)) {
         columnOfThree.forEach((circle) => currentBoardOfColors[circle] = 'white')
+        return true
       }
     }
   }, [currentBoardOfColors])
@@ -81,17 +84,18 @@ function App():JSX.Element {
 
       if(rowOfThree.every((circle) => currentBoardOfColors[circle] === currentColor && !isBlank)) {
         rowOfThree.forEach((circle) => currentBoardOfColors[circle] = 'white')
+        return true
       }
     }
   }, [currentBoardOfColors])
 
   const moveBlankColorOutsideSquare = useCallback(() => {
-    for(let i = 0; i <= 55; i++) {
-      const firstRow = [0, 1, 2, 3, 4, 5, 6, 7];
-      const isFirstRow = firstRow.includes(i)
-      
+    for (let i = 0; i <= 55 ; i++) {
+      const firstRow = [0, 1, 2, 3, 4, 5, 6, 7]
+      const isFirstRow = firstRow.includes(i);
+
       if(isFirstRow && currentBoardOfColors[i] === 'white') {
-        let randomNumber = Math.floor(Math.random() * colors.length)
+        const randomNumber = Math.floor(Math.random() * colors.length)
         currentBoardOfColors[i] = colors[randomNumber]
       }
 
@@ -99,7 +103,9 @@ function App():JSX.Element {
         currentBoardOfColors[i + width] = currentBoardOfColors[i]
         currentBoardOfColors[i] = 'white'
       }
+      
     }
+    
   }, [currentBoardOfColors])
 
   useEffect(() => {
@@ -114,17 +120,26 @@ function App():JSX.Element {
       checkColumnOfThree()
       moveBlankColorOutsideSquare()
       setCurrentBoardOfColors([...currentBoardOfColors]);
-    }, 3000)
+    }, 1000)
 
     return () => clearInterval(timer)
   }, [checkColumnOfFour, checkRowOfFour, checkRowOfThree, checkColumnOfThree, currentBoardOfColors, moveBlankColorOutsideSquare])
 
   return (
     <Wrapper>
-      <Game currentBoardOfColors={currentBoardOfColors} />
+      <Game
+       currentBoardOfColors={currentBoardOfColors}
+       setCurrentBoardOfColors={setCurrentBoardOfColors}
+       width={width}
+       checkColumnOfFour={checkColumnOfFour}
+       checkColumnOfThree={checkColumnOfThree}
+       checkRowOfThree={checkRowOfThree}
+       checkRowOfFour={checkColumnOfThree}
+      />
     </Wrapper>
   );
 }
 
 export default App;
+
 
