@@ -10,6 +10,7 @@ const Wrapper = styled.div`
 `;
 
 const width = 8;
+const gameSpeed = 100;
 const colors = [
   'red',
   'green',
@@ -120,7 +121,7 @@ function App():JSX.Element {
       checkColumnOfThree()
       moveBlankColorOutsideSquare()
       setCurrentBoardOfColors([...currentBoardOfColors]);
-    }, 1000)
+    }, gameSpeed)
 
     return () => clearInterval(timer)
   }, [checkColumnOfFour, checkRowOfFour, checkRowOfThree, checkColumnOfThree, currentBoardOfColors, moveBlankColorOutsideSquare])

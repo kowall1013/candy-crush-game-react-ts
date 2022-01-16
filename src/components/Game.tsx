@@ -54,37 +54,8 @@ function Game({
     const idCircleDragged = Number(circleBeingDragged?.getAttribute('data-id')) as number;
     const idCircleReplace = Number(circleBeingReplaced?.getAttribute('data-id')) as number;
 
-    console.log('circleBeingDragged', circleBeingDragged?.getAttribute('data-color'))
-    console.log('circleBeingReplaced', circleBeingReplaced?.getAttribute('data-color'))
-
     currentBoardOfColors[idCircleReplace] = circleBeingDragged?.getAttribute('data-color') as string;
     currentBoardOfColors[idCircleDragged] = circleBeingReplaced?.getAttribute('data-color') as string;
-   
-    const validMoves = [
-      idCircleDragged - 1,
-      idCircleDragged - width,
-      idCircleReplace + 1,
-      idCircleReplace + width
-    ]
-
-    const validMove = validMoves.includes(idCircleReplace)
-      
-    const isAColumnOfFour = checkColumnOfFour()
-    const isARowOfFour = checkRowOfFour()
-    const isAColumnOfThree = checkColumnOfThree()
-    const isARowOfThree = checkRowOfThree()
-
-    if (idCircleReplace &&
-      validMove &&
-      (isARowOfThree || isARowOfFour || isAColumnOfFour || isAColumnOfThree)) {
-      setCircleBeingDragged(null)
-      setCircleBeingReplace(null)
-  } else {
-      currentBoardOfColors[idCircleReplace] = circleBeingReplaced?.getAttribute('data-color') as string;
-      currentBoardOfColors[idCircleDragged] = circleBeingDragged?.getAttribute('data-color') as string;
-      setCurrentBoardOfColors([...currentBoardOfColors])
-  }
-   
   }
 
   function dragDrop(e: React.DragEvent<HTMLDivElement>) {
